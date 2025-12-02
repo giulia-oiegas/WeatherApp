@@ -1,0 +1,260 @@
+:root {
+    --font-main: 'Inter', 'Segoe UI', sans-serif;
+
+    --text-dark: #222;
+    --text-light: #f5f5f5;
+
+    --primary: #2196F3;
+    --primary-hover: #0b7dda;
+
+    --card-radius: 14px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    transition: background 0.4 ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/*WEATHER BACKGROUNDS ------------------------------------------------- */
+body.sunny-bg {
+    background: linear-gradient(180deg, #6ec6ff, #4ba3f2);
+    transition: background 0.8s ease;
+}
+
+body.cloudy-bg{
+    background: linear-gradient(180deg, #dcdcdc, #bcbcbc);
+    transition: background 0.8s ease;
+}
+
+body.rain-bg {
+    background: linear-gradient(180deg, #2f2f2f, #1d1d1d);
+    transition: background 0.8s ease;
+}
+
+body.night-bg {
+    background: linear-gradient(black, #000000);
+    transition: background 0.8 ease;
+}
+
+/*HEADER ------------------------------------------------------------------- */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: gray;
+}
+
+
+/*SEARCH BAR -------------------------------------------------------- */
+.search_container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#cityInput {
+    padding: 10px 14px;
+    width: 230px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: gray;
+}
+
+#searchButton,
+#locationButton {
+    padding: 10px 18px;
+    background: var(--primary);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#searchButton:hover,
+#locationButton:hover {
+    background: var(--primary-hover);
+}
+
+/*LANGUAGE SWITCHER STYLE ------------------------------------------------*/
+.languageSwitcher button {
+    padding: 7px 11px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.languageSwitcher button:hover {
+    background: var(--primary-hover);
+}
+
+/*CELSIUS/FAHRENHEIT SLIDER ---------------------------------------*/
+
+/*the box around the slider for the metric switch*/
+.metricSwitch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 34px;
+    margin-left: 12px;
+}
+
+/*hide default html checkbox*/
+.metricSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/*the slider*/
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #c7c7c7;
+    border-radius: 34;
+    transition: .4s;
+    border: 2px solid #888;
+}
+
+.slider:before {
+    position: absolute;
+    content: "°C";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    color: #333;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+    border-color: #0b7dda;
+}
+
+input:checked+.slider::before {
+    transform: translateX(36px);
+    content: "°F";
+}
+
+/*rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* highlighting the clicked elements*/
+:focus {
+    outline: 3px solid #0078ff;
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+button:focus,
+input[type="submit"]:focus {
+    outline: 3px solid #1a73e8;
+    outline-offset: 2px;
+    background-color: #e8f0fe;
+}
+
+.loadingState {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #444;
+    font-size: 16px;
+}
+
+/*MAIN ------------------------------------------------------------- */
+.mainContent {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px; 
+    flex: 1;
+}
+
+/*grid for weather sections */
+.weatherLayout {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 30px;
+}
+
+/*error / loading messages */
+.exceptionHandling {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/*FOOTER ------------------------------------------------------------ */
+.footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/*RESPONSIVENESS ------------------------------------------------------ */
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .search_container {
+        flex-wrap: wrap;
+    }
+
+    #cityInput {
+        width: 100%;
+    }
+
+    .metricSwitch {
+        padding-top: 10px;
+    }
+
+    .weatherLayout {
+        grid-template-columns: 1fr;
+    }
+
+    .weatherRight {
+        display: flex;
+        justify-content: center;
+    }
+}

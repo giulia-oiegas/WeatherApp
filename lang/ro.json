@@ -1,0 +1,45 @@
+{
+    "app": {
+        "title": "Aplicație Meteo"
+    },
+
+    "search": {
+        "label": "Caută oraș",
+        "placeholder": "Introdu un oraș",
+        "button": "Caută",
+        "use_location": "Folosește locația mea"
+    },
+
+    "weather": {
+        "temperature": "Temperatură",
+        "humidity": "Umiditate",
+        "wind": "Vânt",
+        "clouds": "Nori",
+        "sunrise": "Răsărit",
+        "sunset": "Apus",
+        "description": "Descriere meteo",
+
+        "unit_celsius": "°C",
+        "unit_fahrenheit": "°F",
+
+        "wind_metric": "m/s",
+        "wind_imperial": "mph"
+    },
+
+    "status": {
+        "loading": "Se încarcă...",
+        "updated": "Ultima actualizare:"
+    },
+
+    "errors": {
+        "city_empty": "Introduceți un oraș.",
+        "not_found": "Orașul nu a fost găsit",
+        "api_error": "Eroare de server",
+
+        "geo_denied": "Acces la locație refuzat",
+        "geo_unavailable": "Locația nu a putut fi detectată",
+        "geo_timeout": "Cererea de localizare a expirat",
+
+        "unknown": "A apărut o eroare necunoscută."
+    }
+}

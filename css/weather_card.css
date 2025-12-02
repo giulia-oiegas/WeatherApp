@@ -1,0 +1,55 @@
+/*WEATHER CARD DESIGN ------------------------------------------------------- */
+.weatherLeft {
+    background: white;
+    padding: 15px 60px;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.weatherRight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.weatherHeader h2 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.weatherLeft h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.weatherData p {
+    margin: 6px 0;
+    font-size: 18px;
+}
+
+#temperature {
+    font-size: 70px;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.weatherIconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#weatherIcon {
+    width: 250px;
+    height: 250px;
+}
+
+/*mobile */
+@media (max-width: 900px) {
+    #weatherIcon {
+        width: 130px;
+        height: 130px;
+    }
+}

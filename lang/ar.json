@@ -1,0 +1,45 @@
+{
+    "app": {
+        "title": "تطبيق الطقس"
+    },
+
+    "search": {
+        "label": "ابحث عن مدينة",
+        "placeholder": "أدخل اسم المدينة",
+        "button": "بحث",
+        "use_location": "استخدم موقعي"
+    },
+
+    "weather": {
+        "temperature": "درجة الحرارة",
+        "humidity": "الرطوبة",
+        "wind": "الرياح",
+        "clouds": "الغيوم",
+        "sunrise": "شروق الشمس",
+        "sunset": "غروب الشمس",
+        "description": "وصف الطقس",
+
+        "unit_celsius": "°م",
+        "unit_fahrenheit": "°ف",
+
+        "wind_metric": "م/ث",
+        "wind_imperial": "ميل/س"
+    },
+
+    "status": {
+        "loading": "جارٍ التحميل...",
+        "updated": "آخر تحديث:"
+    },
+
+    "errors": {
+        "city_empty": "الرجاء إدخال اسم مدينة.",
+        "not_found": "لم يتم العثور على المدينة",
+        "api_error": "خطأ في الخادم",
+        
+        "geo_denied": "تم رفض الوصول إلى الموقع",
+        "geo_unavailable": "الموقع غير متاح",
+        "geo_timeout": "انتهت مهلة طلب الموقع.",
+
+        "unknown": "حدث خطأ غير معروف."
+    }
+}

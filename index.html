@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/weather_card.css">
+    <title>Weather App</title>
+</head>
+
+<body>
+    <!--navigation bar-->
+    <header class="navbar">
+        <!--logo-->
+        <div class="logo">Weather App</div>
+
+        <!--search container-->
+        <div class="search_container">
+            <input id="cityInput" data-i18n-placeholder="search_placeholder" type="text" required placeholder="Search city..." class="cityInput">
+            <input id="searchButton" data-i18n="search_button" type="submit">
+            <input id="locationButton" type="submit">
+        </div>
+
+        <!--language switcher-->
+        <div class="languageSwitcher">
+            <button data-lang="ro">RO</button>
+            <button data-lang="en">EN</button>
+            <button data-lang="ar">AR</button>
+        </div>
+        
+        <!--toggle switch for Celsius/Fahrenheit-->
+        <label class="metricSwitch">
+            <input id="unitToggle" type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </header>
+
+    <!--weather card-->
+    <main class="mainContent">
+        <section class="weatherLayout">
+            <div class="weatherLeft">
+                <div class="weatherHeader">
+                    <h2 id="cityName"></h2>
+                </div>
+
+                <div class="weatherData">
+                    <p id="temperature"></p>
+                    <p id="humidity"></p>
+                    <p id="wind"></p>
+                    <p id="clouds"></p>
+                    <p id="sunrise"></p>
+                    <p id="sunset"></p>
+                    <p id="description"></p>
+                </div>
+            </div>
+
+            <div class="weatherRight">
+                <div class="weatherIconContainer">
+                    <img id="weatherIcon" src="" alt="Weather Icon">
+                </div>
+
+            </div>
+        </section>
+
+
+        <!--error/loading messages container-->
+        <div class="exceptionHandling"></div>
+    </main>
+
+    <!--footer-->
+    <footer class="footer">
+        <p>© 2025 WeatherApp. All rights reserved.
+            <a href="contact.html" class="contactLink">Contact</a>
+        </p>
+    </footer>
+
+    <!--js handling-->
+    <script src="app.js"></script>
+</body>
+</html>

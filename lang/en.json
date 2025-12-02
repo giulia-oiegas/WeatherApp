@@ -1,0 +1,45 @@
+{
+    "app": {
+        "title": "Weather App"
+    },
+
+    "search": {
+        "label": "Search city",
+        "placeholder": "Enter a city",
+        "button": "Search",
+        "use_location": "Use my location"
+    },
+
+    "weather": {
+        "temperature": "Temperature",
+        "humidity": "Humidity",
+        "wind": "Wind",
+        "clouds": "Clouds",
+        "sunrise": "Sunrise",
+        "sunset": "Sunset",
+        "description": "Weather description",
+
+        "unit_celsius": "°C",
+        "unit_fahrenheit": "°F",
+
+        "wind_metric": "m/s",
+        "wind_imperial": "mph"
+    },
+
+    "status": {
+        "loading": "Loading...",
+        "updated": "Last update:"
+    },
+
+    "errors": {
+        "city_empty": "Please enter a city.",
+        "not_found": "City not found",
+        "api_error": "Server error",
+
+        "geo_denied": "Location access denied",
+        "geo_unavailable": "Location unavailable",
+        "geo_timeout": "Location request timed out.",
+
+        "unknown": "An unknown error occurred."
+    }
+}
