@@ -17,7 +17,8 @@
 
         <!--search container-->
         <div class="search_container">
-            <input id="cityInput" data-i18n-placeholder="search_placeholder" type="text" required placeholder="Search city..." class="cityInput">
+            <input id="cityInput" data-i18n-placeholder="search_placeholder" type="text" required
+                placeholder="Search city..." class="cityInput">
             <input id="searchButton" data-i18n="search_button" type="submit">
             <input id="locationButton" type="submit">
         </div>
@@ -28,7 +29,7 @@
             <button data-lang="en">EN</button>
             <button data-lang="ar">AR</button>
         </div>
-        
+
         <!--toggle switch for Celsius/Fahrenheit-->
         <label class="metricSwitch">
             <input id="unitToggle" type="checkbox">
@@ -65,7 +66,18 @@
 
 
         <!--error/loading messages container-->
-        <div class="exceptionHandling"></div>
+        <div class="exceptionHandling">
+            <div class="loadingState" id="loadingState">
+                <img src="assets/spinner.svg" alt="Loading..." width="40">
+                <p id="loadingText">Loading...</p>
+            </div>
+
+            <div class="exceptionHandling__dialog" id="errorDialog">
+                <h2 class="exceptionHandling__title" id="errorTitle">Eroare</h2>
+                <p class="exceptionHandling__message" id="exceptionMessage"></p>
+                <button id="retryButton" class="exceptionHandling__button">Retry</button>
+            </div>
+        </div>
     </main>
 
     <!--footer-->
@@ -76,4 +88,5 @@
     <!--js handling-->
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -7,6 +7,14 @@ let i18nDict = {}; //loaded translation
 let i18nErrors = {}; //translated errors
 let i18nUnits = {}; //translated weather units
 
+const exceptionOverlay = document.querySelector(".exceptionHandling");
+const loadingBox = document.getElementById("loadingState");
+const loadingText = document.getElementById("loadingText");
+const errorDialog = document.getElementById("errorDialog");
+const exceptionMessageEl = document.getElementById("exceptionMessage");
+const retryButton = document.getElementById("retryButton");
+const cityInput = document.getElementById("cityInput");
+
 // -------------------------------- I18N helpers -----------------------------
 function detectInitialLanguage() {
     const saved = localStorage.getItem("lang");
@@ -68,19 +76,29 @@ function applyStaticTranslations(dict) {
 
 //this function displays the spinner inside the .exceptionHandler container
 function showLoading() {
-    const box = document.querySelector(".exceptionHandling");
-    box.innerHTML = `
-        <div class="loadingState">
-            <img src="assets/spinner.svg" alt="Loading..." width="40">
-            <p>${i18nDict.status.loading || "Loading..."}</p>
-        </div>
-    `;
+    if (loadingText) {
+        loadingText.textContent = (i18nDict.status && i18nDict.status.loading) || "Loading...";
+    }
+    if (exceptionOverlay) {
+        exceptionOverlay.style.display = "block";
+    }
+    if (loadingBox) {
+        loadingBox.style.display = "flex";
+    }
+    if (errorDialog) {
+        errorDialog.style.display = "none";
+    }
 }
 
 //clears the loading animation
 function hideLoading() {
-    const box = document.querySelector(".exceptionHandling");
-    box.innerHTML = "";
+    if (loadingBox) {
+        loadingBox.style.display = "none";
+    }
+    // overlay-ul va fi ascuns complet aici; showError îl va reactiva dacă e nevoie
+    if (exceptionOverlay) {
+        exceptionOverlay.style.display = "none";
+    }
 }
 
 // --------------------------------- UNIT TOGGLE --------------------------------------
@@ -217,15 +235,24 @@ async function getWeatherByCity(city) {
 //---------------------------------- ERRORS -----------------------------------------
 
 function showError(messageKey) {
-    const box = document.querySelector(".exceptionHandling");
-    let message = i18nErrors[messageKey] || i18nErrors.unknown;
-    
-    box.innerHTML = `
-        <div class="errorState">
-            <p>${message}</p>
-            <button class="retryButton">${i18nDict.status.retry || "Retry."}</button>
-        </div>
-    `;
+    const message =
+        (i18nErrors && i18nErrors[messageKey]) ||
+        (i18nErrors && i18nErrors.unknown) ||
+        "An unexpected error occurred.";
+
+    if (exceptionMessageEl) {
+        exceptionMessageEl.textContent = message;
+    }
+
+    if (exceptionOverlay) {
+        exceptionOverlay.style.display = "block";
+    }
+    if (loadingBox) {
+        loadingBox.style.display = "none";
+    }
+    if (errorDialog) {
+        errorDialog.style.display = "block";
+    }
 }
 
 // -------------------------------- SEARCH ----------------------------------
@@ -382,8 +409,21 @@ document.querySelectorAll(".languageSwitcher button").forEach((btn) => {
     });
 });
 
-document.addEventListener("click", event => {
-    if(event.target.classList.contains("retryButton")) {
-        if(lastQuery) resendLastRequest();
+retryButton.addEventListener("click", () => {
+    // închidem overlay-ul și spinner-ul
+    if (exceptionOverlay) {
+        exceptionOverlay.style.display = "none";
+    }
+    if (loadingBox) {
+        loadingBox.style.display = "none";
+    }
+
+    // „uităm” ultima cerere ca să nu mai refacem orașul greșit
+    lastQuery = null;
+
+    // curățăm inputul și punem focus pentru un nou search
+    if (cityInput) {
+        cityInput.value = "";
+        cityInput.focus();
     }
 });
