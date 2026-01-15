@@ -1,7 +1,9 @@
+// -------------------- DEFINING GLOBAL VARIABLES --------------------------------
+
 const RUN_TESTS = true; 
 
-let currentUnit = "metric"; //metric for celsius, imperial for fahrenheit
-let lastQuery = null; //saves the type of request (city/coords)
+let currentUnit = "metric"; //metric for celsius (default), imperial for fahrenheit
+let lastQuery = null; //saves the last type of request (city/coords)
 
 //i18n globals
 let currentLang = "en";
@@ -9,6 +11,7 @@ let i18nDict = {}; //loaded translation
 let i18nErrors = {}; //translated errors
 let i18nUnits = {}; //translated weather units
 
+//DOM references for error/loading systems
 const exceptionOverlay = document.querySelector(".exceptionHandling");
 const loadingBox = document.getElementById("loadingState");
 const loadingText = document.getElementById("loadingText");
@@ -18,22 +21,22 @@ const retryButton = document.getElementById("retryButton");
 const cityInput = document.getElementById("cityInput");
 
 // -------------------------------- I18N helpers -----------------------------
-function detectInitialLanguage() {
-    const saved = localStorage.getItem("lang");
+function detectInitialLanguage() { //automatic language detection
+    const saved = localStorage.getItem("lang"); //if the app was visited before and there's a preferred language
     if(saved) return saved;
 
-    const browser = navigator.language.substring(0, 2);
+    const browser = navigator.language.substring(0, 2); //the app uses the client's (browser's) preferred language
     if(["ro", "en", "ar"].includes(browser)) return browser;
 
-    return "en"; //fallback
+    return "en"; //fallback - english is the default language
 }
 
 async function loadLanguage(lang) {
     try {
-        const response = await fetch(`lang/${lang}.json`);
+        const response = await fetch(`lang/${lang}.json`); //loading the json lang file according to the selected language
         const dictionary = await response.json();
 
-        i18nDict = dictionary;
+        i18nDict = dictionary; 
         i18nErrors = dictionary.errors;
         i18nUnits = {
             celsius: dictionary.weather.unit_celsius,
@@ -52,13 +55,13 @@ async function loadLanguage(lang) {
 
 function applyRTL(lang) {
     if(lang === "ar") {
-        document.body.dir = "rtl";
+        document.body.dir = "rtl"; //right to left layout
     } else {
         document.body.dir = "ltr";
     }
 }
 
-function applyStaticTranslations(dict) {
+function applyStaticTranslations(dict) { //translating html static elements 
     //placeholders
     document.getElementById("cityInput").placeholder = dict.search.placeholder;
 
@@ -111,7 +114,7 @@ const unitToggle = document.getElementById("unitToggle");
 unitToggle.addEventListener("change", () => {
     if(unitToggle.checked) {
         currentUnit = "imperial"; //Fahrenheit
-    } else {
+    } else if(unitToggle.checked == false){
         currentUnit = "metric";
     }
 
@@ -226,7 +229,7 @@ async function getWeatherByCity(city) {
         }
         const data = await response.json();
         displayWeather(data); //send data to UI
-        // console.log(data);
+        console.log(data);
     } catch(error) {
         hideLoading();
         showError("unknown");
