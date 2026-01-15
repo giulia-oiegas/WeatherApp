@@ -16,7 +16,7 @@ Aplicația este gândită ca un mic produs real: are suport pentru mai multe lim
   - nebulozitatea (procent nori)  
   - ora locală de **răsărit** și **apus**
 
-- 📍 **Folosirea locației curente (Geolocation)**  
+- 📍 **Folosirea locației curente (Geolocation)**
   Poți folosi butonul pentru locația curentă, iar aplicația:
   - cere permisiunea de acces la locație  
   - detectează coordonatele (lat, lon)  
