@@ -1,3 +1,5 @@
+const RUN_TESTS = true; 
+
 let currentUnit = "metric"; //metric for celsius, imperial for fahrenheit
 let lastQuery = null; //saves the type of request (city/coords)
 
@@ -109,7 +111,7 @@ const unitToggle = document.getElementById("unitToggle");
 unitToggle.addEventListener("change", () => {
     if(unitToggle.checked) {
         currentUnit = "imperial"; //Fahrenheit
-    } else if(unitToggle.checked == false){
+    } else {
         currentUnit = "metric";
     }
 
@@ -224,7 +226,7 @@ async function getWeatherByCity(city) {
         }
         const data = await response.json();
         displayWeather(data); //send data to UI
-        console.log(data);
+        // console.log(data);
     } catch(error) {
         hideLoading();
         showError("unknown");
@@ -427,3 +429,148 @@ retryButton.addEventListener("click", () => {
         cityInput.focus();
     }
 });
+
+// get starting location on load
+window.addEventListener("load", () => {
+    getLocation();
+});
+
+
+// Tests:
+function test(name, fn) {
+    return () => {
+        try {
+            const result = fn();
+            if (result instanceof Promise) {
+                result.then(() => console.log(`✔️ PASS: ${name}`))
+                      .catch(err => console.error(`❌ FAIL: ${name}\n   ${err}`));
+            } else {
+                console.log(`✔️ PASS: ${name}`);
+            }
+        } catch (err) {
+            console.error(`❌ FAIL: ${name}\n   ${err}`);
+        }
+    };
+}
+function expect(actual) {
+    return {
+        toEqual(expected, epsilon = 0) {
+            if (epsilon > 0 && Math.abs(actual - expected) <= epsilon) {
+                return true;
+            }
+            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                throw `Expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`;
+            }
+        }
+    };
+}
+function runAllTests(tests) {
+    if (RUN_TESTS) {
+        let delay = 1000;
+        tests.forEach(testFn => {
+            setTimeout(() => { testFn() }, delay);
+            delay += 1000;
+        });
+    }
+}
+
+// TEST CASES
+if (RUN_TESTS) {
+    const dateNow = new Date().getTime() / 1000;
+
+    runAllTests([
+        //D-WB-02 – Conversie metric/imperial
+        test("Temperature display in Celsius", () => {
+            i18nUnits = { celsius: "°C", fahrenheit: "°F", windMetric: "m/s", windImperial: "mph" };
+            i18nDict = { weather: { wind: "Wind", humidity: "Humidity", clouds: "Clouds", sunrise: "Sunrise", sunset: "Sunset" } };
+            currentUnit = "metric";
+            const fake = {
+                name: "Bucharest",
+                main: { temp: 12, humidity: 50 },
+                weather: [{ description: "cloudy", icon: "03d" }],
+                wind: { speed: 8 },
+                clouds: { all: 7 },
+                sys: { sunrise: dateNow - 3600, sunset: dateNow + 3600 },
+                timezone: 0
+            };
+            displayWeather(fake);
+
+            const val = document.getElementById("temperature").textContent;
+            expect(val).toEqual("12°C");
+        }),
+
+        test("Temperature display in Fahrenheit", () => {
+            i18nUnits = { celsius: "°C", fahrenheit: "°F", windMetric: "m/s", windImperial: "mph" };
+            i18nDict = { weather: { wind: "Wind", humidity: "Humidity", clouds: "Clouds", sunrise: "Sunrise", sunset: "Sunset" } };
+            currentUnit = "imperial";
+            const fake = {
+                name: "Paris",
+                main: { temp: 72, humidity: 40 },
+                weather: [{ description: "sunny", icon: "01d" }],
+                wind: { speed: 5 },
+                clouds: { all: 5 },
+                sys: { sunrise: dateNow - 3600, sunset: dateNow + 3600 },
+                timezone: 0
+            };
+            displayWeather(fake); 
+
+            const val = document.getElementById("temperature").textContent;
+            expect(val).toEqual("72°F");
+        }),
+
+        //D-WB-01 – Testare ramuri condiționale
+        test("Conditional branches – empty city input", () => {
+            let errorShown = false;
+            // mock showError
+            const originalShowError = showError;
+            showError = (key) => {
+                if (key === "city_empty") errorShown = true;
+            };
+
+            document.getElementById("cityInput").value = "";
+            searchCity();
+
+            expect(errorShown).toEqual(true);
+
+            showError = originalShowError;
+        }),
+
+        //D-WB-03 – Tratarea erorilor API
+        test("API error handling 404", async () => {
+            let errorKey = null;
+
+            const originalShowError = showError;
+            showError = (key) => { errorKey = key };
+
+            window.fetch = async () => ({ ok: false, status: 404 });
+            await getWeatherByCity("InvalidCity");
+
+            expect(errorKey).toEqual("not_found");
+            
+            showError = originalShowError; // cleanup
+        }),
+
+        //D-WB-05 – Stări loading/error
+        test("Loading and error state transition", () => {
+            showLoading();
+
+            expect(loadingBox.style.display).toEqual("flex");
+
+            showError("api_error");
+
+            expect(loadingBox.style.display).toEqual("none");
+            expect(errorDialog.style.display).toEqual("block");
+        }),
+
+        //D-WB-04 – Testare funcție retry
+        test("Retry button resets lastQuery and input", () => {
+            lastQuery = { type: "city", value: "Paris" };
+            cityInput.value = "Paris";
+
+            retryButton.click();
+
+            expect(lastQuery).toEqual(null);
+            expect(cityInput.value).toEqual("");
+        }),
+    ])
+}
