@@ -444,26 +444,19 @@ function test(name, fn) {
     return () => {
         try {
             const result = fn();
-            if (result instanceof Promise) {
-                result.then(() => console.log(`✔️ PASS: ${name}`))
-                      .catch(err => console.error(`❌ FAIL: ${name}\n   ${err}`));
-            } else {
-                console.log(`✔️ PASS: ${name}`);
-            }
+            console.log(`✔️ PASS: ${name}`);
         } catch (err) {
             console.error(`❌ FAIL: ${name}\n   ${err}`);
         }
     };
 }
-function expect(actual) {
+function expect(actual) { 
     return {
-        toEqual(expected, epsilon = 0) {
-            if (epsilon > 0 && Math.abs(actual - expected) <= epsilon) {
+        toEqual(expected) {
+            if (actual === expected) {
                 return true;
             }
-            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-                throw `Expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`;
-            }
+            else throw `Expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`; //stringify asigura ca putem vedea si obiecte in output
         }
     };
 }
