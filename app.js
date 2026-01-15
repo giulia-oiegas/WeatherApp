@@ -192,15 +192,13 @@ async function getWeatherByCoordinates(lat, lon) {
 
         const data = await response.json();
         displayWeather(data);
-        console.log(data);
+        // console.log(data);
     } catch(e) {
         hideLoading();
         showError("unknown");
         console.error(e);
     }
-    
-
-    console.log("Coordinates received: ", lat, lon);
+    // console.log("Coordinates received: ", lat, lon);
 }
 
 async function getWeatherByCity(city) {
@@ -229,7 +227,7 @@ async function getWeatherByCity(city) {
         }
         const data = await response.json();
         displayWeather(data); //send data to UI
-        console.log(data);
+        // console.log(data);
     } catch(error) {
         hideLoading();
         showError("unknown");
@@ -446,7 +444,7 @@ function test(name, fn) {
             const result = fn();
             console.log(`✔️ PASS: ${name}`);
         } catch (err) {
-            console.error(`❌ FAIL: ${name}\n   ${err}`);
+            console.error(`❌ FAIL: ${name}\n\t${err}`);
         }
     };
 }
@@ -462,7 +460,7 @@ function expect(actual) {
 }
 function runAllTests(tests) {
     if (RUN_TESTS) {
-        let delay = 1000;
+        let delay = 2000;
         tests.forEach(testFn => {
             setTimeout(() => { testFn() }, delay);
             delay += 1000;
@@ -477,8 +475,6 @@ if (RUN_TESTS) {
     runAllTests([
         //D-WB-02 – Conversie metric/imperial
         test("Temperature display in Celsius", () => {
-            i18nUnits = { celsius: "°C", fahrenheit: "°F", windMetric: "m/s", windImperial: "mph" };
-            i18nDict = { weather: { wind: "Wind", humidity: "Humidity", clouds: "Clouds", sunrise: "Sunrise", sunset: "Sunset" } };
             currentUnit = "metric";
             const fake = {
                 name: "Bucharest",
@@ -496,8 +492,6 @@ if (RUN_TESTS) {
         }),
 
         test("Temperature display in Fahrenheit", () => {
-            i18nUnits = { celsius: "°C", fahrenheit: "°F", windMetric: "m/s", windImperial: "mph" };
-            i18nDict = { weather: { wind: "Wind", humidity: "Humidity", clouds: "Clouds", sunrise: "Sunrise", sunset: "Sunset" } };
             currentUnit = "imperial";
             const fake = {
                 name: "Paris",
@@ -515,35 +509,21 @@ if (RUN_TESTS) {
         }),
 
         //D-WB-01 – Testare ramuri condiționale
-        test("Conditional branches – empty city input", () => {
-            let errorShown = false;
-            // mock showError
-            const originalShowError = showError;
-            showError = (key) => {
-                if (key === "city_empty") errorShown = true;
-            };
-
+        test("Conditional branches – empty city input", async () => {
             document.getElementById("cityInput").value = "";
             searchCity();
-
-            expect(errorShown).toEqual(true);
-
-            showError = originalShowError;
+            
+            const error = document.getElementById("exceptionMessage").textContent;
+            expect(error).toEqual(i18nErrors["city_empty"]);
         }),
 
         //D-WB-03 – Tratarea erorilor API
         test("API error handling 404", async () => {
-            let errorKey = null;
-
-            const originalShowError = showError;
-            showError = (key) => { errorKey = key };
-
             window.fetch = async () => ({ ok: false, status: 404 });
             await getWeatherByCity("InvalidCity");
 
-            expect(errorKey).toEqual("not_found");
-            
-            showError = originalShowError; // cleanup
+            const error = document.getElementById("exceptionMessage").textContent;
+            expect(error).toEqual(i18nErrors["not_found"]);
         }),
 
         //D-WB-05 – Stări loading/error
@@ -551,7 +531,6 @@ if (RUN_TESTS) {
             showLoading();
 
             expect(loadingBox.style.display).toEqual("flex");
-
             showError("api_error");
 
             expect(loadingBox.style.display).toEqual("none");
