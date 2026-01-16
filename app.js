@@ -436,9 +436,9 @@ window.addEventListener("load", () => {
     getLocation();
 });
 
+// ------------------------------ TESTS ---------------------------------------
 
-// Tests:
-function test(name, fn) {
+function test(name, fn) { 
     return () => {
         try {
             const result = fn();
@@ -448,6 +448,7 @@ function test(name, fn) {
         }
     };
 }
+
 function expect(actual) { 
     return {
         toEqual(expected) {
@@ -458,12 +459,13 @@ function expect(actual) {
         }
     };
 }
+
 function runAllTests(tests) {
     if (RUN_TESTS) {
         let delay = 2000;
         tests.forEach(testFn => {
             setTimeout(() => { testFn() }, delay);
-            delay += 1000;
+            delay += 2000;
         });
     }
 }
@@ -472,11 +474,13 @@ function runAllTests(tests) {
 if (RUN_TESTS) {
     const dateNow = new Date().getTime() / 1000;
 
+
+    //primeste ca param array de functii de test si le ruleaza pe toate cu un delay intre ele
     runAllTests([
         //D-WB-02 – Conversie metric/imperial
         test("Temperature display in Celsius", () => {
-            currentUnit = "metric";
-            const fake = {
+            currentUnit = "metric"; // setează unitatea de temperatură la Celsius
+            const fake = { // obiect fake care simulează datele primite de la API
                 name: "Bucharest",
                 main: { temp: 12, humidity: 50 },
                 weather: [{ description: "cloudy", icon: "03d" }],
@@ -485,10 +489,10 @@ if (RUN_TESTS) {
                 sys: { sunrise: dateNow - 3600, sunset: dateNow + 3600 },
                 timezone: 0
             };
-            displayWeather(fake);
+            displayWeather(fake); // afișează datele simulate în aplicație
 
-            const val = document.getElementById("temperature").textContent;
-            expect(val).toEqual("12°C");
+            const val = document.getElementById("temperature").textContent;  // citește temperatura afișată în UI
+            expect(val).toEqual("12°C"); // verifică dacă temperatura este afișată corect în Celsius
         }),
 
         test("Temperature display in Fahrenheit", () => {
@@ -508,44 +512,48 @@ if (RUN_TESTS) {
             expect(val).toEqual("72°F");
         }),
 
-        //D-WB-01 – Testare ramuri condiționale
+        //D-WB-01 – Testare ramuri condiționale - input gol in căutare
         test("Conditional branches – empty city input", async () => {
-            document.getElementById("cityInput").value = "";
+            document.getElementById("cityInput").value = ""; 
             searchCity();
             
-            const error = document.getElementById("exceptionMessage").textContent;
-            expect(error).toEqual(i18nErrors["city_empty"]);
+            const error = document.getElementById("exceptionMessage").textContent; //Citește mesajul de eroare afișat în interfață (din DOM)
+            expect(error).toEqual(i18nErrors["city_empty"]);// Verifică dacă mesajul afișat este cel corect pentru cazul de input gol
         }),
 
-        //D-WB-03 – Tratarea erorilor API
+        //D-WB-03 – Tratarea erorilor API – daca orașul nu este găsit
         test("API error handling 404", async () => {
-            window.fetch = async () => ({ ok: false, status: 404 });
-            await getWeatherByCity("InvalidCity");
+            window.fetch = async () => ({ ok: false, status: 404 }); 
+            await getWeatherByCity("InvalidCity"); 
 
-            const error = document.getElementById("exceptionMessage").textContent;
-            expect(error).toEqual(i18nErrors["not_found"]);
+            const error = document.getElementById("exceptionMessage").textContent; 
+            expect(error).toEqual(i18nErrors["not_found"]); 
         }),
 
         //D-WB-05 – Stări loading/error
-        test("Loading and error state transition", () => {
-            showLoading();
+        test("Loading state transition", () => {
+            showLoading(); 
+            expect(loadingBox.style.display).toEqual("flex"); 
+        }),
 
-            expect(loadingBox.style.display).toEqual("flex");
+        test("Error state transition", () => {
             showError("api_error");
 
-            expect(loadingBox.style.display).toEqual("none");
+            expect(loadingBox.style.display).toEqual("none"); 
             expect(errorDialog.style.display).toEqual("block");
         }),
 
-        //D-WB-04 – Testare funcție retry
+        //D-WB-04 – Testare funcție retry 
         test("Retry button resets lastQuery and input", () => {
-            lastQuery = { type: "city", value: "Paris" };
-            cityInput.value = "Paris";
+            lastQuery = { type: "city", value: "Paris" }; 
+            cityInput.value = "Paris"; 
 
-            retryButton.click();
+            setTimeout(() => { 
+                retryButton.click(); 
+                expect(lastQuery).toEqual(null); 
+                expect(cityInput.value).toEqual("");
+            }, 500); 
 
-            expect(lastQuery).toEqual(null);
-            expect(cityInput.value).toEqual("");
         }),
     ])
 }
